@@ -1,4 +1,7 @@
+import { read_cookie as readCookie, bake_cookie as bakeCookie } from 'sfcookies';
 import * as constants from '../actions/constants';
+
+const BALANCE_COOKIE = 'BALANCE_COOKIE';
 
 const {
   SET_BALANCE,
@@ -9,25 +12,32 @@ const {
 const initState = {
   balance: 0,
 };
-export const balanceReducer = (state = initState, action) => {
+const balanceReducer = (state = initState, action) => {
+  let object = { };
   switch (action.type) {
     case SET_BALANCE:
-      return {
+      object = {
         ...state,
         balance: action.payload,
       };
+      break;
     case DEPOSIT:
-      return {
+      object = {
         ...state,
         balance: state.balance + action.payload,
       };
+      break;
     case WITHDRAW:
-      return {
+      object = {
         ...state,
         balance: state.balance - action.payload,
-      }
+      };
+      break;
     default:
-      return initState;
+      return { ...readCookie(BALANCE_COOKIE) } || state;
   }
+  bakeCookie(BALANCE_COOKIE, object);
+  return object;
 };
 
+export default balanceReducer;

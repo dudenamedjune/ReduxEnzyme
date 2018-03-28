@@ -1,4 +1,4 @@
-import { balanceReducer } from './balance';
+import balanceReducer from './balance';
 import * as constants from '../actions/constants';
 
 const {
@@ -12,12 +12,23 @@ let initState = {
 };
 
 describe('balanceReducer', () => {
-  it('sets a balance', () => {
+  describe('when initializing', () => {
     const balance = 10;
 
-    expect(balanceReducer(undefined, { type: SET_BALANCE, payload: balance }))
-      .toEqual({ balance });
+    it('sets a balance', () => {
+      expect(balanceReducer(undefined, { type: SET_BALANCE, payload: balance }))
+        .toEqual({ balance });
+    });
+    describe('re-init', () => {
+      it('reads the balance from cookies', () => {
+        expect(balanceReducer(
+          undefined,
+          { type: SET_BALANCE, payload: balance },
+        )).toEqual({ balance });
+      });
+    });
   });
+
 
   it('deposits into the balance', () => {
     const amountDeposited = 10;
